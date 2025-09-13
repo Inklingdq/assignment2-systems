@@ -41,7 +41,7 @@ def benchmarking(args):
         current_lr = get_cosine_lr(step, 1e-4, 1e-3, 2, 10)
         for group in optimizer.param_groups:
             group["lr"] = current_lr
-        torch.mps.synchronize()
+        torch.cuda.synchronize()
 
         optimizer.step()
         optimizer.zero_grad()
@@ -53,7 +53,7 @@ def benchmarking(args):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Benchmarking a language model.")
     parser.add_argument("--batch-size", type=int, default = 32, help = "Batch Size")
-    parser.add_argument('--device', type = str, default = "mps", help = "Device to run inference on")
+    parser.add_argument('--device', type = str, default = "cuda", help = "Device to run inference on")
     parser.add_argument('--warmup-steps', type = int, default = 5, help = "Steps to warmup before benchmarking")
     parser.add_argument('--measurement-steps', type = int, default = 10, help = "Steps to benchmarking after warmup")
     parser.add_argument('--measure-forward-only', type = bool, default = False, help = "Steps to benchmarking after warmup")
