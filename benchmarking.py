@@ -22,6 +22,8 @@ def benchmarking(args):
     random_data = np.random.randint(low=0, high=args.vocab_size - 1, size=args.context_length * 2, dtype=np.int32)
     x, y = get_batch(dataset = random_data, batch_size = 4, context_length = args.context_length, device = args.device)
     model.to(args.device)
+    if args.jit_compile_model:
+      model = torch.compile(model)
     optimizer = AdamW(model.parameters())
     time = []
     for step in range(args.warmup_steps + args.measurement_steps):
@@ -67,7 +69,7 @@ if __name__ == "__main__":
     parser.add_argument('--warmup-steps', type = int, default = 5, help = "Steps to warmup before benchmarking")
     parser.add_argument('--measurement-steps', type = int, default = 10, help = "Steps to benchmarking after warmup")
     parser.add_argument('--measure-forward-only', type = bool, default = False, help = "Steps to benchmarking after warmup")
-
+    parser.add_argument('--jit-compile-model', type=bool, default = False, help = "Whether to do jit compile model.")
     # Add model hyperparameters
     parser.add_argument('--vocab-size', type=int, default = 10000)
     parser.add_argument('--num-layers', type=int, default=4)
