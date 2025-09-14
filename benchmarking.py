@@ -25,15 +25,22 @@ def benchmarking(args):
     optimizer = AdamW(model.parameters())
     time = []
     for step in range(args.warmup_steps + args.measurement_steps):
+        if step >= args.warmup_steps:
+          # Start recording memory history.
+          torch.cuda.memory._record_memory_history(max_entries=1000000)
+        torch.cuda.synchronize()
         start_time = timeit.default_timer()
         logits = model(x)
         logits_flatten = rearrange(logits, "b c v -> (b c) v")
         y_flatten = rearrange(y, "b c -> (b c)")
         loss = cross_entropy(logits_flatten, y_flatten)
-        end_time = timeit.default_timer()
+        if args.measure_forward_only:
+          torch.cuda.synchronize()
+          end_time = timeit.default_timer()
         loss.backward()
         clip_gradient(model.parameters(), 1)
         if not(args.measure_forward_only):
+            torch.cuda.synchronize()
             end_time = timeit.default_timer()
         time.append(end_time - start_time)
 
@@ -41,13 +48,16 @@ def benchmarking(args):
         current_lr = get_cosine_lr(step, 1e-4, 1e-3, 2, 10)
         for group in optimizer.param_groups:
             group["lr"] = current_lr
-        torch.cuda.synchronize()
 
         optimizer.step()
         optimizer.zero_grad()
-    
+    # Save a pickle file to be loaded by PyTorch's online tool.
+    torch.cuda.memory._dump_snapshot("memory_snapshot.pickle")
+
+    # Stop recording history.
+    torch.cuda.memory._record_memory_history(enabled=None)
     print(f"{args.d_model} {args.d_ff}, {args.num_layers}, {args.num_heads}")
-    print(time)
+    print(time[args.warmup_steps:])
 
     
 if __name__ == "__main__":
