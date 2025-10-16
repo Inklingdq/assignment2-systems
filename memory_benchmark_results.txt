@@ -1,0 +1,5 @@
+Context Length | Forward Pass (GB) | Full Training (GB)
+---------------|-------------------|-------------------
+           128 |               OOM |               OOM
+           256 |               OOM |               OOM
+           512 |               OOM |               OOM

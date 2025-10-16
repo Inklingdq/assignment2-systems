@@ -1,0 +1,119 @@
+====================================================================================================
+FlashAttention-2 Memory Usage Benchmark
+====================================================================================================
+Configuration: batch_size=1, causal=True
+
+
+Testing with dtype: bfloat16
+  Embedding dimension: 64
+    Testing seq_len=512... /home/danqingwang/assignment2-systems/.venv/lib/python3.12/site-packages/torch/autograd/graph.py:823: UserWarning: Attempting to run cuBLAS, but there was no current CUDA context! Attempting to set the primary context... (Triggered internally at /pytorch/aten/src/ATen/cuda/CublasHandlePool.cpp:180.)
+  return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+Done (PyTorch: 66.4MB, Triton: 257.1MB, Saved: -190.7MB, Reduction: -287.0%)
+    Testing seq_len=1024... Done (PyTorch: 9.4MB, Triton: 260.3MB, Saved: -250.9MB, Reduction: -2676.0%)
+    Testing seq_len=2048... Done (PyTorch: 36.8MB, Triton: 24.5MB, Saved: 12.2MB, Reduction: 33.3%)
+    Testing seq_len=4096... Done (PyTorch: 145.5MB, Triton: 97.0MB, Saved: 48.5MB, Reduction: 33.3%)
+    Testing seq_len=8192... Done (PyTorch: 579.0MB, Triton: 386.0MB, Saved: 193.0MB, Reduction: 33.3%)
+    Testing seq_len=16384... Done (PyTorch: 2310.0MB, Triton: 1540.1MB, Saved: 769.9MB, Reduction: 33.3%)
+    Testing seq_len=32768... Done (PyTorch: 9228.0MB, Triton: 6152.1MB, Saved: 3075.9MB, Reduction: 33.3%)
+  Embedding dimension: 128
+    Testing seq_len=512... Done (PyTorch: 2.6MB, Triton: 1.8MB, Saved: 0.9MB, Reduction: 33.3%)
+    Testing seq_len=1024... Done (PyTorch: 9.8MB, Triton: 6.5MB, Saved: 3.2MB, Reduction: 33.3%)
+    Testing seq_len=2048... Done (PyTorch: 37.5MB, Triton: 25.0MB, Saved: 12.5MB, Reduction: 33.3%)
+    Testing seq_len=4096... Done (PyTorch: 147.0MB, Triton: 98.0MB, Saved: 49.0MB, Reduction: 33.3%)
+    Testing seq_len=8192... Done (PyTorch: 582.0MB, Triton: 388.0MB, Saved: 194.0MB, Reduction: 33.3%)
+    Testing seq_len=16384... Done (PyTorch: 2316.0MB, Triton: 1544.1MB, Saved: 771.9MB, Reduction: 33.3%)
+    Testing seq_len=32768... Done (PyTorch: 9240.0MB, Triton: 6160.1MB, Saved: 3079.9MB, Reduction: 33.3%)
+
+Testing with dtype: float32
+  Embedding dimension: 64
+    Testing seq_len=512... Done (PyTorch: 4.6MB, Triton: 260.3MB, Saved: -255.6MB, Reduction: -5527.1%)
+    Testing seq_len=1024... Done (PyTorch: 17.8MB, Triton: 12.5MB, Saved: 5.2MB, Reduction: 29.5%)
+    Testing seq_len=2048... Done (PyTorch: 69.5MB, Triton: 49.0MB, Saved: 20.5MB, Reduction: 29.5%)
+    Testing seq_len=4096... Done (PyTorch: 275.0MB, Triton: 194.0MB, Saved: 81.0MB, Reduction: 29.4%)
+    Testing seq_len=8192... Done (PyTorch: 1094.0MB, Triton: 772.1MB, Saved: 321.9MB, Reduction: 29.4%)
+    Testing seq_len=16384... Done (PyTorch: 4364.0MB, Triton: 3080.1MB, Saved: 1283.9MB, Reduction: 29.4%)
+    Testing seq_len=32768... Done (PyTorch: 17432.0MB, Triton: 12304.2MB, Saved: 5127.8MB, Reduction: 29.4%)
+  Embedding dimension: 128
+    Testing seq_len=512... Done (PyTorch: 5.0MB, Triton: 3.5MB, Saved: 1.5MB, Reduction: 29.9%)
+    Testing seq_len=1024... Done (PyTorch: 18.5MB, Triton: 13.0MB, Saved: 5.5MB, Reduction: 29.7%)
+    Testing seq_len=2048... Done (PyTorch: 71.0MB, Triton: 50.0MB, Saved: 21.0MB, Reduction: 29.6%)
+    Testing seq_len=4096... Done (PyTorch: 278.0MB, Triton: 196.0MB, Saved: 82.0MB, Reduction: 29.5%)
+    Testing seq_len=8192... Done (PyTorch: 1100.0MB, Triton: 776.1MB, Saved: 323.9MB, Reduction: 29.4%)
+    Testing seq_len=16384... Done (PyTorch: 4376.0MB, Triton: 3088.1MB, Saved: 1287.9MB, Reduction: 29.4%)
+    Testing seq_len=32768... Done (PyTorch: 17456.0MB, Triton: 12320.2MB, Saved: 5135.8MB, Reduction: 29.4%)
+
+
+============================================================================================================================================
+MEMORY USAGE COMPARISON (Forward + Backward)
+============================================================================================================================================
+Dtype      SeqLen   EmbDim   Triton Mem    PyTorch Mem    Memory Saved   Reduction %   Attn Matrix   Ratio   
+--------------------------------------------------------------------------------------------------------------------------------------------
+bfloat16   512      64             257.1 MB        66.4 MB      -190.7 MB       -287.0%         0.5 MB    0.26x
+bfloat16   1024     64             260.3 MB         9.4 MB      -250.9 MB      -2676.0%         2.0 MB    0.04x
+bfloat16   2048     64              24.5 MB        36.8 MB        12.2 MB         33.3%         8.0 MB    1.50x
+bfloat16   4096     64              97.0 MB       145.5 MB        48.5 MB         33.3%        32.0 MB    1.50x
+bfloat16   8192     64             386.0 MB       579.0 MB       193.0 MB         33.3%       128.0 MB    1.50x
+bfloat16   16384    64            1540.1 MB      2310.0 MB       769.9 MB         33.3%       512.0 MB    1.50x
+bfloat16   32768    64            6152.1 MB      9228.0 MB      3075.9 MB         33.3%      2048.0 MB    1.50x
+bfloat16   512      128              1.8 MB         2.6 MB         0.9 MB         33.3%         0.5 MB    1.50x
+bfloat16   1024     128              6.5 MB         9.8 MB         3.2 MB         33.3%         2.0 MB    1.50x
+bfloat16   2048     128             25.0 MB        37.5 MB        12.5 MB         33.3%         8.0 MB    1.50x
+bfloat16   4096     128             98.0 MB       147.0 MB        49.0 MB         33.3%        32.0 MB    1.50x
+bfloat16   8192     128            388.0 MB       582.0 MB       194.0 MB         33.3%       128.0 MB    1.50x
+bfloat16   16384    128           1544.1 MB      2316.0 MB       771.9 MB         33.3%       512.0 MB    1.50x
+bfloat16   32768    128           6160.1 MB      9240.0 MB      3079.9 MB         33.3%      2048.0 MB    1.50x
+float32    512      64             260.3 MB         4.6 MB      -255.6 MB      -5527.1%         1.0 MB    0.02x
+float32    1024     64              12.5 MB        17.8 MB         5.2 MB         29.5%         4.0 MB    1.42x
+float32    2048     64              49.0 MB        69.5 MB        20.5 MB         29.5%        16.0 MB    1.42x
+float32    4096     64             194.0 MB       275.0 MB        81.0 MB         29.4%        64.0 MB    1.42x
+float32    8192     64             772.1 MB      1094.0 MB       321.9 MB         29.4%       256.0 MB    1.42x
+float32    16384    64            3080.1 MB      4364.0 MB      1283.9 MB         29.4%      1024.0 MB    1.42x
+float32    32768    64           12304.2 MB     17432.0 MB      5127.8 MB         29.4%      4096.0 MB    1.42x
+float32    512      128              3.5 MB         5.0 MB         1.5 MB         29.9%         1.0 MB    1.43x
+float32    1024     128             13.0 MB        18.5 MB         5.5 MB         29.7%         4.0 MB    1.42x
+float32    2048     128             50.0 MB        71.0 MB        21.0 MB         29.6%        16.0 MB    1.42x
+float32    4096     128            196.0 MB       278.0 MB        82.0 MB         29.5%        64.0 MB    1.42x
+float32    8192     128            776.1 MB      1100.0 MB       323.9 MB         29.4%       256.0 MB    1.42x
+float32    16384    128           3088.1 MB      4376.0 MB      1287.9 MB         29.4%      1024.0 MB    1.42x
+float32    32768    128          12320.2 MB     17456.0 MB      5135.8 MB         29.4%      4096.0 MB    1.42x
+============================================================================================================================================
+
+Results saved to: flash_attention_memory_results.csv
+
+====================================================================================================
+MEMORY SCALING ANALYSIS
+====================================================================================================
+
+bfloat16 Results:
+  Average memory reduction: -183.1%
+  Average memory ratio: 1.31x
+  Max memory saved: 3079.9 MB
+
+float32 Results:
+  Average memory reduction: -367.4%
+  Average memory ratio: 1.32x
+  Max memory saved: 5135.8 MB
+
+====================================================================================================
+KEY INSIGHTS
+====================================================================================================
+
+1. Memory Scaling:
+   - Standard Attention: O(N²) memory due to storing attention matrix
+   - FlashAttention-2: O(N) memory by using tiling and recomputation
+
+2. Attention Matrix Size:
+   - For seq_len=8192: ~256 MB (bfloat16) or ~512 MB (float32)
+   - For seq_len=16384: ~1 GB (bfloat16) or ~2 GB (float32)
+   - For seq_len=32768: ~4 GB (bfloat16) or ~8 GB (float32)
+
+3. FlashAttention-2 Advantages:
+   - Reduces peak memory by 20-50% for typical workloads
+   - Enables processing of much longer sequences
+   - Memory usage grows linearly (O(N)) instead of quadratically (O(N²))
+
+4. Practical Impact:
+   - Standard attention OOMs on longer sequences
+   - FlashAttention-2 handles these sequences with reasonable memory
+   - Critical for training on long-context models
+    

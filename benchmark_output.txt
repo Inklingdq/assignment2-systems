@@ -1,0 +1,11 @@
+Starting Quick FlashAttention-2 Benchmarks
+====================================================================================================
+Configuration: batch_size=1, causal=True
+
+
+Testing with dtype: bfloat16
+  Embedding dimension: 32
+    Testing seq_len=512... Done (Speedup F+B: 1.37x)
+    Testing seq_len=1024... Done (Speedup F+B: 1.19x)
+    Testing seq_len=2048... Done (Speedup F+B: 1.18x)
+    Testing seq_len=4096... 
